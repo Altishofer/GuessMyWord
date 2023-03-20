@@ -8,19 +8,14 @@ function Index() {
     const [word, setWord] = useState('');
     const [hints, setHints] = useState(['Hint 1']);
 
-    // use useEffect to add or remove the .wiggle class
     useEffect(() => {
-        // get the container element
         var container = document.querySelector(".container");
-        // check if the word state is equal to "dog"
-        if (word === "dog") {
-            // add the .wiggle class to the container element
+        if (word === str) {
             container.classList.add("wiggle");
         } else {
-            // remove the .wiggle class from the container element
             container.classList.remove("wiggle");
         }
-    }, [word]); // run this effect whenever the word state changes
+    }, [word]);
 
     const handleWordTypeChange = (type) => {
         setWordType(type);
