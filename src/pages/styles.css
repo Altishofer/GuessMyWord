@@ -27,15 +27,30 @@
 }
 
 @keyframes wiggle {
-    0% { transform: rotate(-1deg); }
-    25% { transform: rotate(1deg); }
-    50% { transform: rotate(-1deg); }
-    75% { transform: rotate(1deg); }
-    100% { transform: rotate(-1deg); }
-    75% { transform: rotate(1deg); }
-    50% { transform: rotate(-1deg); }
-    25% { transform: rotate(1deg); }
-    0% { transform: rotate(-1deg); }
+    0% { transform: rotate(-0.5deg); }
+    25% { transform: rotate(0.5deg); }
+    50% { transform: rotate(-0.5deg); }
+    75% { transform: rotate(0.5deg); }
+    100% { transform: rotate(-0.5deg); }
+    75% { transform: rotate(0.5deg); }
+    50% { transform: rotate(-0.5deg); }
+    25% { transform: rotate(0.5deg); }
+    0% { transform: rotate(-0.5deg); }
+}
+
+.kader {
+    width: 85px;
+    height: 85px;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+    margin: 60px 30px;
+    position: absolute;
+    animation-name: wiggle;
+    animation-duration: 0.25s; /* adjust this as you like */
+    animation-iteration-count: infinite;
+    animation-direction: alternate; /* makes it go back and forth */
+    animation-timing-function: cubic-bezier(0.68,-0.55,0.265,1.55); /* creates a smooth transition */
 }
 
 .input-container{
