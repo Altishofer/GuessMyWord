@@ -53,7 +53,7 @@ function Index() {
                 ))}
             </div>
             <div className="input-container">
-                <input type="text" value={word} onChange={handleWordChange} className="input" />
+                <input type="text" value={word} onChange={handleWordChange} className="input" autocomplete="new-password" />
             </div>
             <div>
                 <button onClick={handleRevealNextLetter} className="btn" disabled={letters.length===0}>Reveal Next Letter</button>
