@@ -34,17 +34,17 @@ function Index() {
         setHints([...hints, `Hint ${hints.length + 1}`]);
     };
 
-    let input = document.querySelector(".input");
-    let button = document.querySelector(".btn");
     let str = "dog";
     let letters = str.split("");
 
     const handleRevealNextLetter = () => {
-        if (letters.length > 0) {
+        const input = document.querySelector(".input");
+        if (!letters.isNull && letters.length > 0) {
             const letter = letters.shift();
             input.value += letter;
         } else {
-            button.disabled = true;
+            input.value = "";
+            letters = str.split("");
         }
     };
 
@@ -61,7 +61,7 @@ function Index() {
                 <input type="text" value={word} onChange={handleWordChange} className="input" />
             </div>
             <div>
-                <button onClick={handleRevealNextLetter} className="btn">Reveal Next Letter</button>
+                <button onClick={handleRevealNextLetter} className="btn" disabled={letters.length===0}>Reveal Next Letter</button>
             </div>
             <div className="hints-container">
                 {hints.map((hint) => (
