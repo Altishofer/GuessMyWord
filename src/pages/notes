@@ -1,0 +1,52 @@
+import React, { useState } from 'react';
+
+const wordTypes = ['Noun', 'Verb', 'Adjective'];
+
+function Home() {
+  const [wordType, setWordType] = useState(wordTypes[0]);
+  const [word, setWord] = useState('');
+  const [hints, setHints] = useState(['Hint 1']);
+
+  const handleWordTypeChange = (type) => {
+    setWordType(type);
+  };
+
+  const handleWordChange = (event) => {
+    setWord(event.target.value);
+  };
+
+  const handleRevealNextLetter = () => {
+    // logic to reveal next letter of the unknown word
+  };
+
+  const handleAddHint = () => {
+    // logic to add next hint
+    setHints([...hints, `Hint ${hints.length + 1}`]);
+  };
+
+  return (
+    <div>
+      <div>
+        {wordTypes.map((type) => (
+          <button key={type} onClick={() => handleWordTypeChange(type)}>
+            {type}
+          </button>
+        ))}
+      </div>
+      <div>
+        <input type="text" value={word} onChange={handleWordChange} />
+      </div>
+      <div>
+        <button onClick={handleRevealNextLetter}>Reveal Next Letter</button>
+      </div>
+      <div>
+        {hints.map((hint) => (
+          <p key={hint}>{hint}</p>
+        ))}
+        <button onClick={handleAddHint}>Add Hint</button>
+      </div>
+    </div>
+  );
+}
+
+export default Home;
