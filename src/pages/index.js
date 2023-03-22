@@ -25,7 +25,7 @@ function Index() {
         const container = document.querySelector(".container");
         const input = document.querySelector(".input");
         console.log(word, input.value);
-        if (word === input.value) {
+        if (!word.empty && word === input.value) {
             setHintIndex(word.length);
             container.classList.add("wiggle");
         } else {
