@@ -18,9 +18,15 @@ function Index() {
         cefrLevels.map(() => false)
     );
 
+    activatedWordTypes[0] = true;
+    activatedCefrLevels[1] = true;
+
     useEffect(() => {
-        var container = document.querySelector(".container");
-        if (word === "dog") {
+        const container = document.querySelector(".container");
+        const input = document.querySelector(".input");
+        console.log(word, input.value);
+        if (word === input.value) {
+            setHintIndex(word.length);
             container.classList.add("wiggle");
         } else {
             container.classList.remove("wiggle");
@@ -43,8 +49,10 @@ function Index() {
         setCefrLevel(level);
     };
 
-    const handleWordChange = (event) => {
-        setWord(event.target.value);
+    const handleWordChange = () => {
+        const input = document.querySelector(".input");
+        setUserInput(input.value);
+        console.log(input.value, word);
     };
 
     const handleAddHint = () => {
@@ -79,19 +87,18 @@ function Index() {
     const handleRevealNextLetter = () => {
         const input = document.querySelector(".input");
         const letters = word.split("");
-        input.value = "";
         if (letters.length > hintIndex){
+            input.value = "";
+            setUserInput("");
             for (let i=0; i<hintIndex+1; i++){
                 input.value += letters[i];
             }
             setHintIndex(hintIndex +1);
-            console.log(input.value);
-            setUserInput(input.value);
         } else {
             setHintIndex(0);
         }
+        setUserInput(input.value);
     };
-
     return (
         <div className="container">
             <div className="word-types">
@@ -99,10 +106,16 @@ function Index() {
                     <button
                         key={type}
                         onClick={() => handleWordTypeChange(type)}
-                        className={`btn ${activatedWordTypes[wordTypes.indexOf(type)] ? "active" : ""}`}
+                        className={`btn ${
+                            activatedWordTypes[wordTypes.indexOf(type)] ? "active" : ""
+                        }`}
                         style={{
-                            backgroundColor: activatedWordTypes[wordTypes.indexOf(type)] ? "#000000" : "#FFFFFF",
-                            color: activatedWordTypes[wordTypes.indexOf(type)] ? "#FFFFFF" : "#000000"
+                            backgroundColor: activatedWordTypes[wordTypes.indexOf(type)]
+                                ? "#000000"
+                                : "#FFFFFF",
+                            color: activatedWordTypes[wordTypes.indexOf(type)]
+                                ? "#FFFFFF"
+                                : "#000000",
                         }}
                     >
                         {type}
@@ -118,8 +131,12 @@ function Index() {
                             activatedCefrLevels[cefrLevels.indexOf(level)] ? "active" : ""
                         }`}
                         style={{
-                            backgroundColor: activatedCefrLevels[cefrLevels.indexOf(level)] ? "#000000" : "#FFFFFF",
-                            color: activatedCefrLevels[cefrLevels.indexOf(level)] ? "#FFFFFF" : "#000000"
+                            backgroundColor: activatedCefrLevels[cefrLevels.indexOf(level)]
+                                ? "#000000"
+                                : "#FFFFFF",
+                            color: activatedCefrLevels[cefrLevels.indexOf(level)]
+                                ? "#FFFFFF"
+                                : "#000000",
                         }}
                     >
                         {level}
@@ -132,25 +149,27 @@ function Index() {
                     value={userInput}
                     onChange={handleWordChange}
                     className="input"
-                    autoComplete="off"
+                    autoComplete="new-password"
+                    disabled={hintIndex > word.length || userInput === word}
                 />
-                <button
-                    onClick={handleRandomWord}
-                    className="btn"
-                    disabled={hintIndex < word.length}
-                >
-                    Random Word
-                </button>
+                <div className="button-container">
+                    <button
+                        onClick={handleRevealNextLetter}
+                        className="btn"
+                        disabled={hintIndex >= word.length || userInput === word}
+                    >
+                        Reveal Next Letter
+                    </button>
+                    <button
+                        onClick={handleRandomWord}
+                        className="btn"
+                        disabled={hintIndex < word.length && userInput !== word}
+                    >
+                        Random Word
+                    </button>
+                </div>
             </div>
-            <div>
-                <button
-                    onClick={handleRevealNextLetter}
-                    className="btn"
-                    disabled={hintIndex >= word.length}
-                >
-                    Reveal Next Letter
-                </button>
-            </div>
+
             <div className="hints-container">
                 {hints.map((hint) => (
                     <p key={hint}>{hint}</p>

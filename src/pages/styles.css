@@ -4,8 +4,21 @@
     --drop-shadow: 0px 2px 4px rgba(0,0,0,.1);
 }
 
+.word-types, .cefr-levels {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    width: 355px;
+}
+
+.word-types button, .cefr-levels button {
+    flex-grow: 1;
+    margin: 5px;
+}
+
+
 .container {
-    max-width:800px;
+    width: 800px;
     margin:0 auto;
     background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
     padding: 1.5em;
@@ -47,17 +60,25 @@
     margin: 60px 30px;
     position: absolute;
     animation-name: wiggle;
-    animation-duration: 0.25s; /* adjust this as you like */
+    animation-duration: 0.25s;
     animation-iteration-count: infinite;
-    animation-direction: alternate; /* makes it go back and forth */
-    animation-timing-function: cubic-bezier(0.68,-0.55,0.265,1.55); /* creates a smooth transition */
+    animation-direction: alternate;
+    animation-timing-function: cubic-bezier(0.68,-0.55,0.265,1.55);
 }
 
-.input-container{
-    margin-top:20px;
+.input-container {
+    margin-top: 20px;
     font-weight: bold;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 385px;
 }
 
 .hints-container {
@@ -112,17 +133,48 @@
     cursor: default;
     opacity: 0.4;
 }
-
 .input {
-    width: 300px;
+    width: 100%;
+    width: 355px;
     text-align: center;
-    border-radius: 0.3em; /* this will make the input edges round */
-    border: none; /* this will remove the default border of the input */
-    padding: 6px; /* this will create some space inside the input */
-    text-transform: uppercase; /* this will make the input text uppercase */
-    font-size: 13px; /* this will match the font size of the buttons */
-    background-color: whitesmoke; /* this will match the background color of the buttons */
+    border-radius: 0.3em;
+    border: none;
+    padding: 6px;
+    text-transform: uppercase;
+    font-size: 13px;
+    background-color: whitesmoke;
     font-weight: bold;
+    color: black;
+}
+
+
+.input:disabled{
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #f90000, #ff8c00, #ffd700, #008000, #00a5ff, #3f00ff, #f90000);
+    background-size: 400% 400%;
+    animation: flow 30s ease infinite;
+}
+
+@keyframes flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.input:focus {
+    outline: none;
+}
+
+.input:disabled::placeholder {
+    color: rgba(255,255,255,0.6);
+    mix-blend-mode: difference;
 }
 
 .input:focus {
