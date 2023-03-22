@@ -5,12 +5,13 @@ const wordTypes = ["noun", "verb", "adjective", "adverb", "preposition"];
 const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function Index() {
+    const [definitions, setDefinitions] = useState([]);
     const [hintIndex, setHintIndex] = useState(0);
     const [userInput, setUserInput] = useState("");
     const [wordType, setWordType] = useState(wordTypes[0]);
     const [cefrLevel, setCefrLevel] = useState(cefrLevels[0]);
     const [word, setWord] = useState("");
-    const [hints, setHints] = useState(["Hint 1"]);
+    const [hints, setHints] = useState([]);
     const [activatedWordTypes, setActivatedWordTypes] = useState(
         wordTypes.map(() => false)
     );
@@ -20,6 +21,7 @@ function Index() {
 
     activatedWordTypes[0] = true;
     activatedCefrLevels[1] = true;
+
 
     useEffect(() => {
         const container = document.querySelector(".container");
@@ -56,12 +58,14 @@ function Index() {
     };
 
     const handleAddHint = () => {
-        setHints([...hints, `Hint ${hints.length + 1}`]);
+        setHints([...hints, `${definitions.pop()}`]);
+        console.log(definitions);
     };
 
     const handleRandomWord = () => {
         setUserInput("");
         setHintIndex(0);
+        setHints([]);
         const url = `static/corpus.csv?wordType=${wordType}&cefrLevel=${cefrLevel}`;
         fetch(url)
             .then((response) => response.text())
@@ -77,7 +81,28 @@ function Index() {
                 if (filteredLines.length > 0) {
                     const randomIndex = Math.floor(Math.random() * filteredLines.length);
                     const fields = filteredLines[randomIndex].split(",");
-                    setWord(fields[0].trim().replace('"', ""));
+                    const str = fields[0].trim().replace(/^"(.*)"$/, "$1");
+                    setWord(str);
+                    const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${str}`;
+                    fetch(url)
+                        .then((response) => response.json())
+                        .then((json_data) => {
+                            const def = [];
+                            for (const meaning of json_data[0]["meanings"]) {
+                                if (meaning["partOfSpeech"] === "noun") { //todo: sort out selected pos
+                                    for (const defin of meaning["definitions"]) {
+                                        def.push(defin["definition"]);
+                                    }
+                                }
+                                console.log(def)
+                                setDefinitions(def);
+                        }
+
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            handleRandomWord();
+                        });
                 } else {
                     setWord("No words found");
                 }
@@ -163,7 +188,8 @@ function Index() {
                     <button
                         onClick={handleRandomWord}
                         className="btn"
-                        disabled={hintIndex < word.length && userInput !== word}
+
+                        disabled={hintIndex < word.length && userInput !== word && hints.length != 0}
                     >
                         Random Word
                     </button>
@@ -174,7 +200,11 @@ function Index() {
                 {hints.map((hint) => (
                     <p key={hint}>{hint}</p>
                 ))}
-                <button onClick={handleAddHint} className="btn">
+                <button
+                    onClick={handleAddHint}
+                    className="btn"
+                    //disabled={hints.length===0}
+                >
                     Add Hint
                 </button>
             </div>
