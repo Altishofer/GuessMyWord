@@ -58,8 +58,10 @@ function Index() {
     };
 
     const handleAddHint = () => {
-        setHints([...hints, `${definitions.pop()}`]);
-        console.log(definitions);
+        let newHint = definitions.pop();
+        if (newHint !== null && newHint !== "undefined"){
+            setHints([...hints, `${newHint}`]);
+        }
     };
 
     const handleRandomWord = () => {
