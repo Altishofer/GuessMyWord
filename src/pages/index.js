@@ -47,6 +47,7 @@ function Index() {
 
     const handleWordChange = (event) => {
         setUserInput(event.target.value.slice(0, word.length)); // Limit the input characters to the length of the word
+        setDisplayedWord(event.target.value.slice(0, word.length))
         console.log(event.target.value, word);
     };
 
@@ -193,7 +194,7 @@ function Index() {
                 onChange={handleWordChange}
                 className="input"
                 autoComplete="new-password"
-                style={{ display: "none" }} // Hide the actual input field
+                //style={{ display: "none" }}
                 //disabled={hintIndex > word.length || userInput === word}
             />
             <div className="button-container">

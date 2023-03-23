@@ -77,9 +77,14 @@
 .input-letter,
 .input-underline {
     font-size: 24px;
-    padding: 0 2px;
+
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-inline: 0.1em;
     font-family: monospace;
     color:white;
+    text-transform: uppercase;
+
 }
 
 input-letter:disabled{
