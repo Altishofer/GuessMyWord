@@ -5,6 +5,7 @@ const wordTypes = ["noun", "verb", "adjective", "adverb", "preposition"];
 const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function Index() {
+    const [displayedWord, setDisplayedWord] = useState("");
     const [definitions, setDefinitions] = useState([]);
     const [hintIndex, setHintIndex] = useState(0);
     const [userInput, setUserInput] = useState("");
@@ -44,10 +45,9 @@ function Index() {
         setCefrLevel(level);
     };
 
-    const handleWordChange = () => {
-        const input = document.querySelector(".input");
-        setUserInput(input.value);
-        console.log(input.value, word);
+    const handleWordChange = (event) => {
+        setUserInput(event.target.value.slice(0, word.length)); // Limit the input characters to the length of the word
+        console.log(event.target.value, word);
     };
 
     const handleAddHint = () => {
@@ -94,6 +94,9 @@ function Index() {
                                     }
                                 }
                                 console.log(def)
+                                if (def.length<2){
+                                    handleRandomWord();
+                                }
                                 setDefinitions(def);
                         }
 
@@ -107,20 +110,19 @@ function Index() {
                 }
             });
     };
-
     const handleRevealNextLetter = () => {
         const input = document.querySelector(".input");
         const letters = word.split("");
-        if (letters.length > hintIndex){
-            input.value = "";
-            setUserInput("");
-            for (let i=0; i<hintIndex+1; i++){
-                input.value += letters[i];
+        let newDisplayedWord = "";
+        if (letters.length > hintIndex) {
+            for (let i = 0; i < hintIndex + 1; i++) {
+                newDisplayedWord += letters[i];
             }
-            setHintIndex(hintIndex +1);
+            setHintIndex(hintIndex + 1);
         } else {
             setHintIndex(0);
         }
+        setDisplayedWord(newDisplayedWord); // Update the displayedWord
         setUserInput(input.value);
     };
     return (
@@ -168,13 +170,28 @@ function Index() {
                 ))}
             </div>
             <div className="input-container">
+                <div className="input-display">
+                    {displayedWord.split("").map((letter, index) => (
+                        <span key={index} className="input-letter">
+                    {letter}
+                </span>
+                    ))}
+                    {Array(Math.max(0, word.length - displayedWord.length))
+                        .fill("_")
+                        .map((underline, index) => (
+                            <span key={index + displayedWord.length} className="input-underline">
+      {underline}
+    </span>
+                        ))}
+                </div>
                 <input
                     type="text"
                     value={userInput}
                     onChange={handleWordChange}
                     className="input"
                     autoComplete="new-password"
-                    disabled={hintIndex > word.length || userInput === word}
+                    style={{ display: "none" }} // Hide the actual input field
+                    //disabled={hintIndex > word.length || userInput === word}
                 />
                 <div className="button-container">
                     <button

@@ -66,6 +66,30 @@
     animation-timing-function: cubic-bezier(0.68,-0.55,0.265,1.55);
 }
 
+/* Add to your styles.css file */
+.input-display {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-letter,
+.input-underline {
+    font-size: 24px;
+    padding: 0 2px;
+    font-family: monospace;
+    color:white;
+}
+
+input-letter:disabled{
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, white, white, white, white, #f90000, #ff8c00, #ffd700, #008000);
+    background-size: 400% 400%;
+    animation: flow 5s;
+}
+
 .input-container {
     margin-top: 20px;
     font-weight: bold;
@@ -143,6 +167,7 @@
     font-size: 13px;
     font-weight: bold;
     color: black;
+    display: block;
 }
 
 
