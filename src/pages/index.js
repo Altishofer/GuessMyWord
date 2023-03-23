@@ -5,6 +5,7 @@ const wordTypes = ["noun", "verb", "adjective", "adverb", "preposition"];
 const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function Index() {
+    const [guessedCorrectly, setGuessedCorrectly] = useState(false);
     const [displayedWord, setDisplayedWord] = useState("");
     const [definitions, setDefinitions] = useState([]);
     const [hintIndex, setHintIndex] = useState(0);
@@ -46,10 +47,18 @@ function Index() {
     };
 
     const handleWordChange = (event) => {
+
+        console.log(word);
         setUserInput(event.target.value.slice(0, word.length)); // Limit the input characters to the length of the word
         setDisplayedWord(event.target.value.slice(0, word.length))
-        console.log(event.target.value, word);
+        if (event.target.value.slice(0, word.length) === word) {
+            setGuessedCorrectly(true);
+        }
+        else {
+            setGuessedCorrectly(false);
+        }
     };
+
 
     const handleAddHint = () => {
         if (definitions.length ===0){return;}
@@ -60,6 +69,7 @@ function Index() {
     };
 
     const handleRandomWord = () => {
+        setGuessedCorrectly(false);
         setDisplayedWord("")
         setUserInput("");
         setHintIndex(0);
@@ -176,9 +186,14 @@ function Index() {
         <div className="input-container">
             <div className="input-display">
                 {displayedWord.split("").map((letter, index) => (
-                    <span key={index} className="input-letter">
-                    {letter}
-                </span>
+                    <span
+                        key={index}
+                        className={`input-letter${guessedCorrectly ? " rainbow" : ""}`}
+                        disabled={word === displayedWord && word !== ""}
+                    >
+    {letter}
+</span>
+
                 ))}
                 {Array(Math.max(0, word.length - displayedWord.length))
                     .fill("_")
@@ -194,7 +209,6 @@ function Index() {
                 onChange={handleWordChange}
                 className="input"
                 autoComplete="new-password"
-                //style={{ display: "none" }}
                 //disabled={hintIndex > word.length || userInput === word}
             />
             <div className="button-container">

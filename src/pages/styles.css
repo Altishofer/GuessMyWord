@@ -77,24 +77,21 @@
 .input-letter,
 .input-underline {
     font-size: 24px;
-
     padding-top: 1em;
     padding-bottom: 1em;
     padding-inline: 0.1em;
     font-family: monospace;
     color:white;
     text-transform: uppercase;
-
 }
 
 input-letter:disabled{
     font-weight: bold;
-    color: white;
+    color: red;
     background: -webkit-linear-gradient(#eee, #333);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 400% 400%;
-    animation: flow 5s;
 }
 
 .input-container {
@@ -104,6 +101,26 @@ input-letter:disabled{
     flex-direction: column;
     align-items: center;
 }
+
+.rainbow {
+    background: linear-gradient(45deg, #f90000, #ff8c00, #ffd700, #008000);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow 1s ease-in-out infinite;
+    transform: scale(1.5);
+}
+
+@keyframes rainbow {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 400%;
+    }
+}
+
+
 
 .button-container {
     display: flex;
