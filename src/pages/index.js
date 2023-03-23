@@ -19,9 +19,6 @@ function Index() {
         cefrLevels.map(() => false)
     );
 
-    activatedWordTypes[0] = true;
-    activatedCefrLevels[1] = true;
-
 
     useEffect(() => {
         const container = document.querySelector(".container");
@@ -36,17 +33,13 @@ function Index() {
     }, [word]);
 
     const handleWordTypeChange = (type) => {
-        const newActivatedWordTypes = [...activatedWordTypes];
-        newActivatedWordTypes[wordTypes.indexOf(type)] =
-            !activatedWordTypes[wordTypes.indexOf(type)];
+        const newActivatedWordTypes = wordTypes.map((_, index) => index === wordTypes.indexOf(type));
         setActivatedWordTypes(newActivatedWordTypes);
         setWordType(type);
     };
 
     const handleCefrLevelChange = (level) => {
-        const newActivatedCefrLevels = [...activatedCefrLevels];
-        newActivatedCefrLevels[cefrLevels.indexOf(level)] =
-            !activatedCefrLevels[cefrLevels.indexOf(level)];
+        const newActivatedCefrLevels = cefrLevels.map((_, index) => index === cefrLevels.indexOf(level));
         setActivatedCefrLevels(newActivatedCefrLevels);
         setCefrLevel(level);
     };
@@ -58,8 +51,9 @@ function Index() {
     };
 
     const handleAddHint = () => {
+        if (definitions.length ===0){return;}
         let newHint = definitions.pop();
-        if (newHint !== null && newHint !== "undefined"){
+        if (newHint !== null && newHint !== "no hints found in corpora"){
             setHints([...hints, `${newHint}`]);
         }
     };
@@ -83,7 +77,7 @@ function Index() {
                 if (filteredLines.length > 0) {
                     const randomIndex = Math.floor(Math.random() * filteredLines.length);
                     const fields = filteredLines[randomIndex].split(",");
-                    const str = fields[0].trim().replace(/^"(.*)"$/, "$1");
+                    const str = fields[0].trim().replace(/"(.*)"$/, "$1");
                     setWord(str);
                     const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${str}`;
                     fetch(url)
@@ -93,7 +87,10 @@ function Index() {
                             for (const meaning of json_data[0]["meanings"]) {
                                 if (meaning["partOfSpeech"] === "noun") { //todo: sort out selected pos
                                     for (const defin of meaning["definitions"]) {
-                                        def.push(defin["definition"]);
+                                        def.push(defin["definition"].replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "").replace(
+                                            word,
+                                            "#".repeat(word.length)
+                                        ));
                                     }
                                 }
                                 console.log(def)
@@ -191,7 +188,7 @@ function Index() {
                         onClick={handleRandomWord}
                         className="btn"
 
-                        disabled={hintIndex < word.length && userInput !== word && hints.length != 0}
+                        disabled={hintIndex < word.length && userInput !== word && hints.length !== 0 }
                     >
                         Random Word
                     </button>
@@ -205,7 +202,7 @@ function Index() {
                 <button
                     onClick={handleAddHint}
                     className="btn"
-                    //disabled={hints.length===0}
+                    //disabled={hints.length<=0}
                 >
                     Add Hint
                 </button>

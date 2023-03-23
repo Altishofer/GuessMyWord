@@ -148,10 +148,10 @@
 
 .input:disabled{
     font-weight: bold;
-    color: white;
-    background: linear-gradient(45deg, #f90000, #ff8c00, #ffd700, #008000, #00a5ff, #3f00ff, #f90000);
+    color: black;
+    background: linear-gradient(45deg, white, white, white, white, #f90000, #ff8c00, #ffd700, #008000);
     background-size: 400% 400%;
-    animation: flow 5s ease 1 forwards;
+    animation: flow 5s;
 }
 
 @keyframes flow {
