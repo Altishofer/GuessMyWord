@@ -85,7 +85,9 @@
 input-letter:disabled{
     font-weight: bold;
     color: white;
-    background: linear-gradient(45deg, white, white, white, white, #f90000, #ff8c00, #ffd700, #008000);
+    background: -webkit-linear-gradient(#eee, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     background-size: 400% 400%;
     animation: flow 5s;
 }

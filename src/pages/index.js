@@ -59,6 +59,7 @@ function Index() {
     };
 
     const handleRandomWord = () => {
+        setDisplayedWord("")
         setUserInput("");
         setHintIndex(0);
         setHints([]);
@@ -87,10 +88,11 @@ function Index() {
                             for (const meaning of json_data[0]["meanings"]) {
                                 if (meaning["partOfSpeech"] === "noun") { //todo: sort out selected pos
                                     for (const defin of meaning["definitions"]) {
-                                        def.push(defin["definition"].replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "").replace(
-                                            word,
-                                            "#".repeat(word.length)
-                                        ));
+                                        let hintToAdd = defin["definition"];
+                                        hintToAdd = hintToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
+                                        hintToAdd = hintToAdd.replace(word, "#".repeat(word.length));
+                                        console.log(hintToAdd);
+                                        def.push(hintToAdd);
                                     }
                                 }
                                 console.log(def)
@@ -106,7 +108,7 @@ function Index() {
                             handleRandomWord();
                         });
                 } else {
-                    setWord("No words found");
+                    setWord("No Cefr & POS selected");
                 }
             });
     };
