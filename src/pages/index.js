@@ -108,7 +108,8 @@ function Index() {
                                 }
                                 console.log(def)
                                 if (def.length<2){
-                                    handleRandomWord();
+                                    //handleRandomWord();
+                                    continue;
                                 }
                                 setDefinitions(def);
                         }
