@@ -206,3 +206,12 @@ input-letter:disabled{
 .input:focus {
     outline: none;
 }
+
+.header-title {
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    font-family: monospace;
+    font-size: xxx-large;
+}
+

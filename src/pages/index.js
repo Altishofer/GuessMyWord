@@ -128,105 +128,106 @@ function Index() {
         setUserInput(input.value);
     };
     return (
-        <div className="container">
-            <div className="word-types">
-                {wordTypes.map((type) => (
-                    <button
-                        key={type}
-                        onClick={() => handleWordTypeChange(type)}
-                        className={`btn ${
-                            activatedWordTypes[wordTypes.indexOf(type)] ? "active" : ""
-                        }`}
-                        style={{
-                            backgroundColor: activatedWordTypes[wordTypes.indexOf(type)]
-                                ? "#000000"
-                                : "#FFFFFF",
-                            color: activatedWordTypes[wordTypes.indexOf(type)]
-                                ? "#FFFFFF"
-                                : "#000000",
-                        }}
-                    >
-                        {type}
-                    </button>
-                ))}
-            </div>
-            <div className="cefr-levels">
-                {cefrLevels.map((level) => (
-                    <button
-                        key={level}
-                        onClick={() => handleCefrLevelChange(level)}
-                        className={`btn ${
-                            activatedCefrLevels[cefrLevels.indexOf(level)] ? "active" : ""
-                        }`}
-                        style={{
-                            backgroundColor: activatedCefrLevels[cefrLevels.indexOf(level)]
-                                ? "#000000"
-                                : "#FFFFFF",
-                            color: activatedCefrLevels[cefrLevels.indexOf(level)]
-                                ? "#FFFFFF"
-                                : "#000000",
-                        }}
-                    >
-                        {level}
-                    </button>
-                ))}
-            </div>
-            <div className="input-container">
-                <div className="input-display">
-                    {displayedWord.split("").map((letter, index) => (
-                        <span key={index} className="input-letter">
+    <div className="container">
+        <h1 className="header-title">Guess my Word</h1>
+        <div className="word-types">
+            {wordTypes.map((type) => (
+                <button
+                    key={type}
+                    onClick={() => handleWordTypeChange(type)}
+                    className={`btn ${
+                        activatedWordTypes[wordTypes.indexOf(type)] ? "active" : ""
+                    }`}
+                    style={{
+                        backgroundColor: activatedWordTypes[wordTypes.indexOf(type)]
+                            ? "#000000"
+                            : "#FFFFFF",
+                        color: activatedWordTypes[wordTypes.indexOf(type)]
+                            ? "#FFFFFF"
+                            : "#000000",
+                    }}
+                >
+                    {type}
+                </button>
+            ))}
+        </div>
+        <div className="cefr-levels">
+            {cefrLevels.map((level) => (
+                <button
+                    key={level}
+                    onClick={() => handleCefrLevelChange(level)}
+                    className={`btn ${
+                        activatedCefrLevels[cefrLevels.indexOf(level)] ? "active" : ""
+                    }`}
+                    style={{
+                        backgroundColor: activatedCefrLevels[cefrLevels.indexOf(level)]
+                            ? "#000000"
+                            : "#FFFFFF",
+                        color: activatedCefrLevels[cefrLevels.indexOf(level)]
+                            ? "#FFFFFF"
+                            : "#000000",
+                    }}
+                >
+                    {level}
+                </button>
+            ))}
+        </div>
+        <div className="input-container">
+            <div className="input-display">
+                {displayedWord.split("").map((letter, index) => (
+                    <span key={index} className="input-letter">
                     {letter}
                 </span>
-                    ))}
-                    {Array(Math.max(0, word.length - displayedWord.length))
-                        .fill("_")
-                        .map((underline, index) => (
-                            <span key={index + displayedWord.length} className="input-underline">
+                ))}
+                {Array(Math.max(0, word.length - displayedWord.length))
+                    .fill("_")
+                    .map((underline, index) => (
+                        <span key={index + displayedWord.length} className="input-underline">
       {underline}
     </span>
-                        ))}
-                </div>
-                <input
-                    type="text"
-                    value={userInput}
-                    onChange={handleWordChange}
-                    className="input"
-                    autoComplete="new-password"
-                    style={{ display: "none" }} // Hide the actual input field
-                    //disabled={hintIndex > word.length || userInput === word}
-                />
-                <div className="button-container">
-                    <button
-                        onClick={handleRevealNextLetter}
-                        className="btn"
-                        disabled={hintIndex >= word.length || userInput === word}
-                    >
-                        Reveal Next Letter
-                    </button>
-                    <button
-                        onClick={handleRandomWord}
-                        className="btn"
-
-                        disabled={hintIndex < word.length && userInput !== word && hints.length !== 0 }
-                    >
-                        Random Word
-                    </button>
-                </div>
+                    ))}
             </div>
-
-            <div className="hints-container">
-                {hints.map((hint) => (
-                    <p key={hint}>{hint}</p>
-                ))}
+            <input
+                type="text"
+                value={userInput}
+                onChange={handleWordChange}
+                className="input"
+                autoComplete="new-password"
+                style={{ display: "none" }} // Hide the actual input field
+                //disabled={hintIndex > word.length || userInput === word}
+            />
+            <div className="button-container">
                 <button
-                    onClick={handleAddHint}
+                    onClick={handleRevealNextLetter}
                     className="btn"
-                    //disabled={hints.length<=0}
+                    disabled={hintIndex >= word.length || userInput === word}
                 >
-                    Add Hint
+                    Reveal Next Letter
+                </button>
+                <button
+                    onClick={handleRandomWord}
+                    className="btn"
+
+                    disabled={hintIndex < word.length && userInput !== word && hints.length !== 0 }
+                >
+                    Random Word
                 </button>
             </div>
         </div>
+
+        <div className="hints-container">
+            {hints.map((hint) => (
+                <p key={hint}>{hint}</p>
+            ))}
+            <button
+                onClick={handleAddHint}
+                className="btn"
+                //disabled={hints.length<=0}
+            >
+                Add Hint
+            </button>
+        </div>
+    </div>
     );
 }
 
