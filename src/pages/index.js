@@ -8,13 +8,15 @@ function Index() {
     const [guessedCorrectly, setGuessedCorrectly] = useState(false);
     const [displayedWord, setDisplayedWord] = useState("");
     const [definitions, setDefinitions] = useState([]);
+    const [examples, setExamples] = useState([]);
     const [hintIndex, setHintIndex] = useState(0);
     const [userInput, setUserInput] = useState("");
     const [wordType, setWordType] = useState(wordTypes[0]);
     const [cefrLevel, setCefrLevel] = useState(cefrLevels[0]);
     const [word, setWord] = useState("");
     const [error, setError] = useState("");
-    const [hints, setHints] = useState([]);
+    const [publicDefinitions, setPublicDefinitions] = useState([]);
+    const [publicExamples, setPublicExamples] = useState([]);
     const [activatedWordTypes, setActivatedWordTypes] = useState(
         wordTypes.map(() => false)
     );
@@ -26,7 +28,6 @@ function Index() {
     useEffect(() => {
         const container = document.querySelector(".container");
         const input = document.querySelector(".input");
-        console.log(word, input.value);
         if (!word.empty && word === input.value) {
             setHintIndex(word.length);
             container.classList.add("wiggle");
@@ -49,7 +50,6 @@ function Index() {
 
     const handleWordChange = (event) => {
 
-        console.log(word);
         setUserInput(event.target.value.slice(0, word.length)); // Limit the input characters to the length of the word
         setDisplayedWord(event.target.value.slice(0, word.length))
         if (event.target.value.slice(0, word.length) === word) {
@@ -61,20 +61,28 @@ function Index() {
     };
 
 
-    const handleAddHint = () => {
+    const handleAddDefinition = () => {
         if (definitions.length ===0){return;}
-        let newHint = definitions.pop();
-        if (newHint !== null && newHint !== "no hints found in corpora"){
-            setHints([...hints, `${newHint}`]);
+        let newDefinition = definitions.pop();
+        if (newDefinition !== null && newDefinition !== "no definitions found in corpora"){
+            setPublicDefinitions([...publicDefinitions, `${newDefinition}`]);
         }
     };
+    const handleAddExample = () => {
+        if (examples.length ===0){return;}
+        let newExample = examples.pop();
+        if (newExample !== null && newExample !== "no example found in corpora"){
+            setPublicExamples([...publicExamples, `${newExample}`]);
+        }
+    };
+
 
     const handleRandomWord = () => {
         setGuessedCorrectly(false);
         setDisplayedWord("")
         setUserInput("");
         setHintIndex(0);
-        setHints([]);
+        setDefinitions([]);
         setError(null);
         const url = `static/corpus.csv?wordType=${wordType}&cefrLevel=${cefrLevel}`;
         fetch(url)
@@ -98,22 +106,34 @@ function Index() {
                         .then((response) => response.json())
                         .then((json_data) => {
                             const def = [];
+                            const exa =[];
                             for (const meaning of json_data[0]["meanings"]) {
-                                if (meaning["partOfSpeech"] === "noun") { //todo: sort out selected pos
+
+                                if (meaning["partOfSpeech"] === wordType) {
+
                                     for (const defin of meaning["definitions"]) {
+
+
                                         let hintToAdd = defin["definition"];
                                         hintToAdd = hintToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
                                         hintToAdd = hintToAdd.replace(word, "#".repeat(word.length));
-                                        console.log(hintToAdd);
                                         def.push(hintToAdd);
+                                        if (defin.hasOwnProperty('example') !='')
+                                        {
+                                            let exampleToAdd= defin['example'];
+                                            exampleToAdd = exampleToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
+                                            exampleToAdd = exampleToAdd.replace(str, "*".repeat(str.length));
+                                            exa.push(exampleToAdd);
+                                        }
+                                        //todo: the reating von jedem example oder defintion
                                     }
                                 }
-                                console.log(def)
-                                if (def.length<2){
-                                    //handleRandomWord();
+                                if (def.length + exa.length <2){
+                                    handleRandomWord();
                                     continue;
                                 }
                                 setDefinitions(def);
+                                setExamples(exa);
                         }
 
                         })
@@ -232,25 +252,41 @@ function Index() {
                     onClick={handleRandomWord}
                     className="btn"
 
-                    disabled={hintIndex < word.length && userInput !== word && hints.length !== 0 }
+                    disabled={hintIndex < word.length && userInput !== word  }
                 >
                     Random Word
                 </button>
             </div>
         </div>
-
-        <div className="hints-container">
-            {hints.map((hint) => (
-                <p key={hint}>{hint}</p>
-            ))}
-            <button
-                onClick={handleAddHint}
-                className="btn"
-                //disabled={hints.length<=0}
-            >
-                Add Hint
-            </button>
+        <div>
+            <div className="hints-container">
+                {publicDefinitions.map((definition) => (
+                    <p key={definition}>{definition}</p>
+                ))}
+                <button
+                    onClick={handleAddDefinition}
+                    className="btn"
+                    //disabled={hints.length<=0}
+                >
+                    Add definition  <br/>
+                </button>
+                {publicDefinitions.length} of {definitions.length + publicDefinitions.length}  revealed
+            </div>
+            <div className="hints-container">
+                {publicExamples.map((example) => (
+                    <p key={example}>{example}</p>
+                ))}
+                <button
+                    onClick={handleAddExample}
+                    className="btn"
+                    //disabled={hints.length<=0}
+                >
+                    Add Example  <br/>
+                </button>
+                {publicExamples.length} of {examples.length + publicExamples.length}  revealed
+            </div>
         </div>
+
     </div>
     );
 }
