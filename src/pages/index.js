@@ -47,9 +47,8 @@ function Index() {
     };
 
     const handleWordChange = (event) => {
-
         console.log(word);
-        setUserInput(event.target.value.slice(0, word.length)); // Limit the input characters to the length of the word
+        setUserInput(event.target.value.slice(0, word.length));
         setDisplayedWord(event.target.value.slice(0, word.length))
         if (event.target.value.slice(0, word.length) === word) {
             setGuessedCorrectly(true);
