@@ -8,26 +8,29 @@ function Index() {
     const [guessedCorrectly, setGuessedCorrectly] = useState(false);
     const [displayedWord, setDisplayedWord] = useState("");
     const [definitions, setDefinitions] = useState([]);
-    const [hintIndex, setHintIndex] = useState(0);
+    const [examples, setExamples] = useState([]);
+    const [hintIndex, setHintIndex] = useState(20);
+    const [letterShown, setLetterShown] = useState(0);
     const [userInput, setUserInput] = useState("");
     const [wordType, setWordType] = useState(wordTypes[0]);
     const [cefrLevel, setCefrLevel] = useState(cefrLevels[0]);
     const [word, setWord] = useState("");
-    const [hints, setHints] = useState([]);
+    const [error, setError] = useState("");
+    const [publicDefinitions, setPublicDefinitions] = useState([]);
+    const [publicExamples, setPublicExamples] = useState([]);
     const [activatedWordTypes, setActivatedWordTypes] = useState(
         wordTypes.map(() => false)
     );
     const [activatedCefrLevels, setActivatedCefrLevels] = useState(
         cefrLevels.map(() => false)
     );
+    const [countRequest, setCountRequest] = useState(0);
 
 
     useEffect(() => {
         const container = document.querySelector(".container");
         const input = document.querySelector(".input");
-        console.log(word, input.value);
         if (!word.empty && word === input.value) {
-            setHintIndex(word.length);
             container.classList.add("wiggle");
         } else {
             container.classList.remove("wiggle");
@@ -59,20 +62,38 @@ function Index() {
     };
 
 
-    const handleAddHint = () => {
+    const handleAddDefinition = () => {
+        setHintIndex(hintIndex - 1);
+        setCountRequest(0);
         if (definitions.length ===0){return;}
-        let newHint = definitions.pop();
-        if (newHint !== null && newHint !== "no hints found in corpora"){
-            setHints([...hints, `${newHint}`]);
+        let newDefinition = definitions.pop();
+        if (newDefinition !== null && newDefinition !== "no definitions found in corpora"){
+            setPublicDefinitions([...publicDefinitions, `${newDefinition}`]);
         }
     };
+    const handleAddExample = () => {
+        setHintIndex(hintIndex - 1);
+        setCountRequest(0);
+        if (examples.length ===0){return;}
+        let newExample = examples.pop();
+        if (newExample !== null && newExample !== "no example found in corpora"){
+            setPublicExamples([...publicExamples, `${newExample}`]);
+        }
+    };
+
 
     const handleRandomWord = () => {
         setGuessedCorrectly(false);
         setDisplayedWord("")
         setUserInput("");
-        setHintIndex(0);
-        setHints([]);
+        setLetterShown(0);
+        setHintIndex(hintIndex+ 5);
+
+        setDefinitions([]);
+        setExamples([]);
+        setPublicExamples([]);
+        setPublicDefinitions([]);
+        setError(null);
         const url = `static/corpus.csv?wordType=${wordType}&cefrLevel=${cefrLevel}`;
         fetch(url)
             .then((response) => response.text())
@@ -90,36 +111,54 @@ function Index() {
                     const fields = filteredLines[randomIndex].split(",");
                     const str = fields[0].trim().replace(/"(.*)"$/, "$1");
                     setWord(str);
-                    const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${str}`;
-                    fetch(url)
+                    //const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${str}`;
+                    const options = {
+                    	method: 'GET',
+                    	headers: {
+                    		'X-RapidAPI-Key': '382102422cmshf0f6394b2011b79p18585bjsn297072bb9584',
+                    		'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com'
+                    	}
+                    };
+                    const url= 'https://wordsapiv1.p.rapidapi.com/words/'+str;
+
+                    fetch(url, options)
                         .then((response) => response.json())
                         .then((json_data) => {
+
                             const def = [];
-                            for (const meaning of json_data[0]["meanings"]) {
-                                if (meaning["partOfSpeech"] === "noun") { //todo: sort out selected pos
-                                    for (const defin of meaning["definitions"]) {
-                                        let hintToAdd = defin["definition"];
-                                        hintToAdd = hintToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
-                                        hintToAdd = hintToAdd.replace(word, "#".repeat(word.length));
-                                        console.log(hintToAdd);
-                                        def.push(hintToAdd);
+                            const exa =[];
+
+                            for (const meaning of json_data["results"]) {
+                                if (meaning["partOfSpeech"] === wordType) {
+
+                                    console.log(meaning["definition"])
+                                    let definitionToAdd = meaning["definition"];
+                                    def.push(definitionToAdd);
+                                    if (meaning.hasOwnProperty('examples'))
+                                    {
+                                        for (const example of meaning["examples"]) {
+                                            console.log(meaning["examples"])
+
+                                            let exampleToAdd= example;
+                                            exampleToAdd = exampleToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
+                                            exampleToAdd = exampleToAdd.replace(str, "*".repeat(str.length));
+                                            exa.push(exampleToAdd);
+                                                //todo: the reating von jedem example oder defintion
+                                        }
                                     }
                                 }
-                                console.log(def)
-                                if (def.length<2){
-                                    //handleRandomWord();
-                                    continue;
-                                }
-                                setDefinitions(def);
-                        }
+                            }
+                            setDefinitions(def);
+                            setExamples(exa);
+
 
                         })
                         .catch((error) => {
                             console.error(error);
-                            handleRandomWord();
                         });
                 } else {
-                    setWord("No Cefr & POS selected");
+                    setWord("");
+                    setError("No word with this parameter available")
                 }
             });
     };
@@ -127,20 +166,22 @@ function Index() {
         const input = document.querySelector(".input");
         const letters = word.split("");
         let newDisplayedWord = "";
-        if (letters.length > hintIndex) {
-            for (let i = 0; i < hintIndex + 1; i++) {
+        if (letters.length > letterShown) {
+            for (let i = 0; i < letterShown + 1; i++) {
                 newDisplayedWord += letters[i];
             }
-            setHintIndex(hintIndex + 1);
+            setLetterShown(letterShown + 1);
         } else {
-            setHintIndex(0);
+            setLetterShown(0);
         }
         setDisplayedWord(newDisplayedWord); // Update the displayedWord
         setUserInput(input.value);
+        setHintIndex(hintIndex - 2);
     };
     return (
     <div className="container">
         <h1 className="header-title">Guess my Word</h1>
+        <h2> points {hintIndex} </h2>
         <div className="word-types">
             {wordTypes.map((type) => (
                 <button
@@ -185,6 +226,11 @@ function Index() {
         </div>
         <div className="input-container">
             <div className="input-display">
+            { setError &&
+              <p className="error-text">
+                {error}
+                </p>
+            }
                 {displayedWord.split("").map((letter, index) => (
                     <span
                         key={index}
@@ -212,36 +258,67 @@ function Index() {
                 //disabled={hintIndex > word.length || userInput === word}
             />
             <div className="button-container">
-                <button
-                    onClick={handleRevealNextLetter}
-                    className="btn"
-                    disabled={hintIndex >= word.length || userInput === word}
-                >
-                    Reveal Next Letter
-                </button>
-                <button
-                    onClick={handleRandomWord}
-                    className="btn"
+                <div>
+                    <button
+                        onClick={handleRevealNextLetter}
+                        className="hints-button"
+                        disabled={hintIndex >= 30 || userInput === word}
+                    >
+                        Reveal Next Letter
+                        <br /> -2 points
+                    </button>
+                </div>
+                <div>
+                    <br />
+                    correct word
+                    <br />
+                    +5 Points
 
-                    disabled={hintIndex < word.length && userInput !== word && hints.length !== 0 }
+                </div>
+                <div>
+
+                    <button
+                        onClick={handleRandomWord}
+                        className="btn"
+
+                        disabled={letterShown < word.length && userInput !== word  }
+                    >
+                        Next Word
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div className= "hints-container">
+            <div className="hints-definition">
+                {publicDefinitions.map((definition) => (
+                    <p key={definition}>{definition}</p>
+                ))}
+                <button
+                    onClick={handleAddDefinition}
+                    className="hints-button"
+                    //disabled={hints.length<=0}
                 >
-                    Random Word
+                    Add definition  <br /> -1 points
                 </button>
+                {publicDefinitions.length} of {definitions.length + publicDefinitions.length}  revealed
+            </div>
+            <div className="hints-example">
+                {publicExamples.map((example) => (
+                    <p key={example}>{example}</p>
+                ))}
+                <button
+                    onClick={handleAddExample}
+                    className="hints-button"
+                    //disabled={hints.length<=0}
+                >
+                    Add Example
+                     <br /> -1 points
+                </button>
+
+                {publicExamples.length} of {examples.length + publicExamples.length}  revealed
             </div>
         </div>
 
-        <div className="hints-container">
-            {hints.map((hint) => (
-                <p key={hint}>{hint}</p>
-            ))}
-            <button
-                onClick={handleAddHint}
-                className="btn"
-                //disabled={hints.length<=0}
-            >
-                Add Hint
-            </button>
-        </div>
     </div>
     );
 }
