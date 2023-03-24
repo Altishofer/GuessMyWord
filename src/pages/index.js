@@ -271,13 +271,21 @@ function Index() {
 
                 </div>
                 <div>
+                    <br />
+                    correct word
+                    <br />
+                    +5 Points
+
+                </div>
+                <div>
+
                     <button
                         onClick={handleRandomWord}
                         className="btn"
 
                         disabled={letterShown < word.length && userInput !== word  }
                     >
-                        Random Word
+                        Nex Word
                     </button>
                 </div>
             </div>
@@ -292,7 +300,7 @@ function Index() {
                     className="hints-button"
                     //disabled={hints.length<=0}
                 >
-                    Add definition  <br/>
+                    Add definition  <br /> -1 points
                 </button>
                 {publicDefinitions.length} of {definitions.length + publicDefinitions.length}  revealed
             </div>
@@ -305,7 +313,8 @@ function Index() {
                     className="hints-button"
                     //disabled={hints.length<=0}
                 >
-                    Add Example  <br/>
+                    Add Example
+                     <br /> -1 points
                 </button>
 
                 {publicExamples.length} of {examples.length + publicExamples.length}  revealed
