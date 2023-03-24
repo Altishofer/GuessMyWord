@@ -13,6 +13,7 @@ function Index() {
     const [wordType, setWordType] = useState(wordTypes[0]);
     const [cefrLevel, setCefrLevel] = useState(cefrLevels[0]);
     const [word, setWord] = useState("");
+    const [error, setError] = useState("");
     const [hints, setHints] = useState([]);
     const [activatedWordTypes, setActivatedWordTypes] = useState(
         wordTypes.map(() => false)
@@ -74,6 +75,7 @@ function Index() {
         setUserInput("");
         setHintIndex(0);
         setHints([]);
+        setError(null);
         const url = `static/corpus.csv?wordType=${wordType}&cefrLevel=${cefrLevel}`;
         fetch(url)
             .then((response) => response.text())
@@ -120,7 +122,8 @@ function Index() {
                             handleRandomWord();
                         });
                 } else {
-                    setWord("No Cefr & POS selected");
+                    setWord("");
+                    setError("No word with this parameter available")
                 }
             });
     };
@@ -186,6 +189,11 @@ function Index() {
         </div>
         <div className="input-container">
             <div className="input-display">
+            { setError &&
+              <p className="error-text">
+                {error}
+                </p>
+            }
                 {displayedWord.split("").map((letter, index) => (
                     <span
                         key={index}
