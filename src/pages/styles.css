@@ -237,3 +237,7 @@ input-letter:disabled{
     font-size: xxx-large;
 }
 
+.error-text {
+    color: #FF5C5C;
+}
+
