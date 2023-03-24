@@ -86,7 +86,7 @@ function Index() {
         setGuessedCorrectly(false);
         setDisplayedWord("")
         setUserInput("");
-
+        setLetterShown(0);
         setHintIndex(hintIndex+ 5);
 
         setDefinitions([]);
@@ -267,8 +267,6 @@ function Index() {
                         Reveal Next Letter
                         <br /> -2 points
                     </button>
-
-
                 </div>
                 <div>
                     <br />
@@ -285,7 +283,7 @@ function Index() {
 
                         disabled={letterShown < word.length && userInput !== word  }
                     >
-                        Nex Word
+                        Next Word
                     </button>
                 </div>
             </div>
