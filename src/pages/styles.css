@@ -130,6 +130,13 @@ input-letter:disabled{
 }
 
 .hints-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+
+}
+
+.hints-example {
     font-weight:bold ;
     margin-top :20px ;
     display :flex ;
@@ -141,13 +148,66 @@ input-letter:disabled{
     background-color :whitesmoke ;
 }
 
-.hints-container p {
+.hints-example p {
     width: 300px;
     margin: 10px;
     border-radius: 0.3em;
     border: 2px solid black;
     padding: 10px;
     text-align: center;
+}
+
+
+.hints-definition {
+    font-weight:bold ;
+    margin-top :20px ;
+    display :flex ;
+    flex-wrap :wrap ;
+    flex-direction :column ;
+    align-items :center ;
+    border-radius :.3em ;
+    padding :10px ;
+    background-color :whitesmoke ;
+}
+
+.hints-definition p {
+    width: 300px;
+    margin: 10px;
+    border-radius: 0.3em;
+    border: 2px solid black;
+    padding: 10px;
+    text-align: center;
+}
+
+.hints-button {
+    position:relative;
+    font-weight: bold;
+    margin: 10px; /* this will create some space between the buttons */
+    border-radius: 0.3em; /* this will make the button edges round */
+    padding: 6px;
+    text-transform: uppercase;
+    font-size: 13px;
+    text-align: center;
+    height:  fit-content;
+    border: none;
+    cursor: pointer;
+    opacity: 1;
+    color: black;
+    background-color: #a2f9ff;
+    border-color: black;
+    border-style: solid;
+    border-width: 0.1px;
+    transition: all 0.3s ease;
+}
+
+.hints-button:hover {
+    transform: scale(1.05);
+    cursor: default;
+ }
+
+.hints-button:disabled {
+    cursor: default;
+    opacity: 0.4;
 }
 
 .party {
