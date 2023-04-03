@@ -297,7 +297,51 @@ input-letter:disabled{
     font-size: xxx-large;
 }
 
-.error-text {
-    color: #FF5C5C;
+.points {
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    font-family: monospace;
+    text-transform: Uppercase;
+    font-size: 20px;
 }
+
+.h2 {
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    font-family: monospace;
+    font-size: xxx-large;
+}
+
+.error-text {
+    font-weight: bold;
+    color: indianred;
+    text-align: center;
+    font-family: monospace;
+    font-size: 15px;
+    background-color: #ffffff;
+    border: 2px solid indianred;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 355px;
+}
+
+.error-text::before {
+    content: "⚠️ ";
+    font-size: 20px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.error-text::after {
+    content: "⚠️ ";
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
 

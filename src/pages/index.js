@@ -87,8 +87,6 @@ function Index() {
         setDisplayedWord("")
         setUserInput("");
         setLetterShown(0);
-        setHintIndex(hintIndex+ 5);
-
         setDefinitions([]);
         setExamples([]);
         setPublicExamples([]);
@@ -181,7 +179,7 @@ function Index() {
     return (
     <div className="container">
         <h1 className="header-title">Guess my Word</h1>
-        <h2> points {hintIndex} </h2>
+        <h2 className="points">score: {hintIndex} </h2>
         <div className="word-types">
             {wordTypes.map((type) => (
                 <button
@@ -269,19 +267,14 @@ function Index() {
                     </button>
                 </div>
                 <div>
-                    <br />
-                    correct word
-                    <br />
-                    +5 Points
-
-                </div>
-                <div>
 
                     <button
                         onClick={handleRandomWord}
                         className="btn"
 
-                        disabled={letterShown < word.length && userInput !== word  }
+                        disabled={(letterShown < word.length && userInput !== word) ||
+                            (!activatedWordTypes.includes(true)) ||
+                            (!activatedCefrLevels.includes(true)) }
                     >
                         Next Word
                     </button>
