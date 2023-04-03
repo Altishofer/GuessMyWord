@@ -224,11 +224,11 @@ function Index() {
         </div>
         <div className="input-container">
             <div className="input-display">
-            { setError &&
-              <p className="error-text">
-                {error}
-                </p>
-            }
+                { setError &&
+                    <p className={error ? "error-text" : ""}>
+                        {error}
+                    </p>
+                }
                 {displayedWord.split("").map((letter, index) => (
                     <span
                         key={index}
@@ -271,7 +271,6 @@ function Index() {
                     <button
                         onClick={handleRandomWord}
                         className="btn"
-
                         disabled={(letterShown < word.length && userInput !== word) ||
                             (!activatedWordTypes.includes(true)) ||
                             (!activatedCefrLevels.includes(true)) }
