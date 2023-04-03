@@ -16,7 +16,6 @@
     margin: 5px;
 }
 
-
 .container {
     width: 800px;
     margin:0 auto;
@@ -352,6 +351,22 @@ input-letter:disabled{
     font-size: 20px;
     margin-bottom: 5px;
     margin-left: 5px;
+}
+
+.overlay{
+    margin:0 auto;
+    background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+    padding: 1.5em;
+    border-radius: var(--border-radius);
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    box-shadow : var(--drop-shadow);
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    font-family: monospace;
+    font-size: x-large;
 }
 
 
