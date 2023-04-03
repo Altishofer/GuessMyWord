@@ -298,7 +298,11 @@ function Index() {
                     <button
                         onClick={handleRevealNextLetter}
                         className="hints-button"
-                        disabled={hintIndex >= 30 || userInput === word}
+                        disabled={userInput === word ||
+                            !activatedWordTypes.includes(true) ||
+                            !activatedCefrLevels.includes(true) ||
+                            word === ""
+                    }
                     >
                         Reveal Next Letter
                         <br /> -2
@@ -326,7 +330,10 @@ function Index() {
                 <button
                     onClick={handleAddDefinition}
                     className="hints-button"
-                    //disabled={hints.length<=0}
+                    disabled={definitions.length<=0 || userInput === word ||
+                        !activatedWordTypes.includes(true) ||
+                        !activatedCefrLevels.includes(true) ||
+                        word === ""}
                 >
                     Add definition  <br /> -1
                 </button>
@@ -339,7 +346,10 @@ function Index() {
                 <button
                     onClick={handleAddExample}
                     className="hints-button"
-                    //disabled={hints.length<=0}
+                    disabled={examples.length<=0 || userInput === word ||
+                        !activatedWordTypes.includes(true) ||
+                        !activatedCefrLevels.includes(true) ||
+                        word === ""}
                 >
                     Add Example
                      <br /> -1
