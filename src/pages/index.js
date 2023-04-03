@@ -141,15 +141,16 @@ function Index() {
                                             exampleToAdd = exampleToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
                                             exampleToAdd = exampleToAdd.replace(str, "*".repeat(str.length));
                                             exa.push(exampleToAdd);
-                                                //todo: the reating von jedem example oder defintion
+                                                //todo: the rating von jedem example oder defintion
                                         }
                                     }
                                 }
                             }
+                            if (def.length <= 3 || exa.length <= 3){
+                                handleRandomWord()
+                            }
                             setDefinitions(def);
                             setExamples(exa);
-
-
                         })
                         .catch((error) => {
                             console.error(error);
