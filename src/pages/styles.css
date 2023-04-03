@@ -189,7 +189,7 @@ input-letter:disabled{
     font-size: 13px;
     text-align: center;
     height:  fit-content;
-    border: none;
+    min-height: 55px;
     cursor: pointer;
     opacity: 1;
     color: black;
@@ -304,6 +304,16 @@ input-letter:disabled{
     font-family: monospace;
     text-transform: Uppercase;
     font-size: 20px;
+}
+
+.info {
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    font-family: monospace;
+    text-transform: Uppercase;
+    font-size: 15px;
+    width: 120px;
 }
 
 .h2 {

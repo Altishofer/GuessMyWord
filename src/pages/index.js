@@ -91,6 +91,7 @@ function Index() {
         setExamples([]);
         setPublicExamples([]);
         setPublicDefinitions([]);
+        setHintIndex(hintIndex+ 5);
         setError(null);
         const url = `static/corpus.csv?wordType=${wordType}&cefrLevel=${cefrLevel}`;
         fetch(url)
@@ -264,14 +265,14 @@ function Index() {
                         disabled={hintIndex >= 30 || userInput === word}
                     >
                         Reveal Next Letter
-                        <br /> -2 points
+                        <br /> -2
                     </button>
                 </div>
+                <h2 className="info">correct word +5</h2>
                 <div>
-
                     <button
                         onClick={handleRandomWord}
-                        className="btn"
+                        className="hints-button"
                         disabled={(letterShown < word.length && userInput !== word) ||
                             (!activatedWordTypes.includes(true)) ||
                             (!activatedCefrLevels.includes(true)) }
@@ -291,7 +292,7 @@ function Index() {
                     className="hints-button"
                     //disabled={hints.length<=0}
                 >
-                    Add definition  <br /> -1 points
+                    Add definition  <br /> -1
                 </button>
                 {publicDefinitions.length} of {definitions.length + publicDefinitions.length}  revealed
             </div>
@@ -305,7 +306,7 @@ function Index() {
                     //disabled={hints.length<=0}
                 >
                     Add Example
-                     <br /> -1 points
+                     <br /> -1
                 </button>
 
                 {publicExamples.length} of {examples.length + publicExamples.length}  revealed
