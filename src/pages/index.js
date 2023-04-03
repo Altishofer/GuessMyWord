@@ -8,6 +8,7 @@ const wordTypes = ["noun", "verb", "adjective", "adverb", "preposition"];
 const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function Index() {
+    const [countWordsCorrect, setCountWordsCorrect] = useState(0);
     const [showOverlay, setShowOverlay] = useState(false);
     const [guessedCorrectly, setGuessedCorrectly] = useState(false);
     const [displayedWord, setDisplayedWord] = useState("");
@@ -40,6 +41,17 @@ function Index() {
             container.classList.remove("wiggle");
         }
     }, [word]);
+
+    useEffect(() => {
+        if(hintIndex < 0 && showOverlay !== true){
+            setShowOverlay(true);
+            setHintIndex(0);
+        }
+
+    }
+
+
+    )
 
     const handleWordTypeChange = (type) => {
         const newActivatedWordTypes = wordTypes.map((_, index) => index === wordTypes.indexOf(type));
@@ -87,6 +99,7 @@ function Index() {
 
 
     const handleRandomWord = () => {
+        setCountWordsCorrect(countWordsCorrect+1);
         setGuessedCorrectly(false);
         setDisplayedWord("")
         setUserInput("");
@@ -182,28 +195,29 @@ function Index() {
         setUserInput(input.value);
         setHintIndex(hintIndex - 2);
     };
+
+
+
     return (
     <div className="container">
         <h1 className="header-title">Guess my Word</h1>
-        <h2 className="points">score: {hintIndex} | words: {hintIndex}</h2>
+        <h2 className="points">score: {hintIndex} | words: {countWordsCorrect}</h2>
         <Popup
             open={showOverlay}
-            onClose={() => setShowOverlay(false)}
+            onClose={() => {
+                setShowOverlay(false);
+                window.location.reload(true);
+            }}
             modal
             closeOnDocumentClick
         >
             <div className="overlay">
-                <p>Game Over! You got {hintIndex} right</p>
-                <button className={"btn"} onClick={() => setShowOverlay(false)}>Restart Game</button>
+                <p>Game Over! You got {countWordsCorrect} words right</p>
+                <button
+                    className={"btn"}
+                    onClick={() => setShowOverlay(false)}>Restart Game</button>
             </div>
         </Popup>
-            <div>
-                <div className="button">
-                    <button type="button" onClick={() => setShowOverlay(true)}>
-                        Show Overlay
-                    </button>
-                </div>
-            </div>
         <div className="word-types">
             {wordTypes.map((type) => (
                 <button
