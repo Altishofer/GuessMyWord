@@ -9,7 +9,8 @@ const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function Index() {
     const [countWordsCorrect, setCountWordsCorrect] = useState(0);
-    const [showOverlay, setShowOverlay] = useState(false);
+    const [showOverlayEndGame, setOverlayEndGame] = useState(false);
+    const [showOverlayNextLevel, setShowOverlayNextLevel] = useState(false);
     const [guessedCorrectly, setGuessedCorrectly] = useState(false);
     const [displayedWord, setDisplayedWord] = useState("");
     const [definitions, setDefinitions] = useState([]);
@@ -43,21 +44,36 @@ function Index() {
     }, [word]);
 
     useEffect(() => {
-        if(hintIndex < 0 && showOverlay !== true){
-            setShowOverlay(true);
+        if(hintIndex < 0 && showOverlayEndGame !== true){
+            setOverlayEndGame(true);
             setHintIndex(0);
         }
+    })
 
-    }
-
-
-    )
+    useEffect(() => {
+        if(hintIndex > 40  && showOverlayNextLevel !== true && activatedCefrLevels.indexOf(true) !=5){
+            setShowOverlayNextLevel(true);
+        }
+    })
 
     const handleWordTypeChange = (type) => {
         const newActivatedWordTypes = wordTypes.map((_, index) => index === wordTypes.indexOf(type));
         setActivatedWordTypes(newActivatedWordTypes);
         setWordType(type);
     };
+
+    const handleCefrLevelIncrease = () => {
+        const indexOldCurrentCefrLevels = cefrLevels.indexOf(cefrLevel)
+        const newActivatedCefrLevels = cefrLevels.map((_, index) => index === indexOldCurrentCefrLevels+1);
+        setActivatedCefrLevels(newActivatedCefrLevels);
+        setCefrLevel(cefrLevels[indexOldCurrentCefrLevels+1]);
+        setHintIndex(20);
+        setShowOverlayNextLevel(false);
+    };
+    const handleClosingPopUp = () => {
+        setShowOverlayNextLevel(false);
+    };
+
 
     const handleCefrLevelChange = (level) => {
         const newActivatedCefrLevels = cefrLevels.map((_, index) => index === cefrLevels.indexOf(level));
@@ -136,7 +152,6 @@ function Index() {
                     	}
                     };
                     const url= 'https://wordsapiv1.p.rapidapi.com/words/'+str;
-
                     fetch(url, options)
                         .then((response) => response.json())
                         .then((json_data) => {
@@ -147,14 +162,11 @@ function Index() {
                             for (const meaning of json_data["results"]) {
                                 if (meaning["partOfSpeech"] === wordType) {
 
-                                    console.log(meaning["definition"])
                                     let definitionToAdd = meaning["definition"];
                                     def.push(definitionToAdd);
                                     if (meaning.hasOwnProperty('examples'))
                                     {
                                         for (const example of meaning["examples"]) {
-                                            console.log(meaning["examples"])
-
                                             let exampleToAdd= example;
                                             exampleToAdd = exampleToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
                                             exampleToAdd = exampleToAdd.replace(str, "*".repeat(str.length));
@@ -203,9 +215,9 @@ function Index() {
         <h1 className="header-title">Guess my Word</h1>
         <h2 className="points">score: {hintIndex} | words: {countWordsCorrect}</h2>
         <Popup
-            open={showOverlay}
+            open={showOverlayEndGame}
             onClose={() => {
-                setShowOverlay(false);
+                setOverlayEndGame(false);
                 window.location.reload(true);
             }}
             modal
@@ -215,8 +227,27 @@ function Index() {
                 <p>Game Over! You got {countWordsCorrect} words right</p>
                 <button
                     className={"btn"}
-                    onClick={() => setShowOverlay(false)}>Restart Game</button>
+                    onClick={() => setOverlayEndGame(false)}>Restart Game</button>
             </div>
+        </Popup>
+        <Popup
+            open={showOverlayNextLevel}
+            onClose={() => {
+                setShowOverlayNextLevel(false);
+            }}
+            modal
+            closeOnDocumentClick
+        >
+            <div className="overlay">
+                <p>You are winning! You could go to the next level</p>
+                <button
+                    className={"btn"}
+                    onClick={() => handleCefrLevelIncrease()}>Go to the next level</button>
+                <button
+                    className={"btn"}
+                    onClick={() => handleClosingPopUp()}>Stay on the same level</button>
+            </div>
+
         </Popup>
         <div className="word-types">
             {wordTypes.map((type) => (
