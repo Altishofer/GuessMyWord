@@ -8,7 +8,7 @@ const wordTypes = ["noun", "verb", "adjective", "adverb", "preposition"];
 const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function Index() {
-    const [countWordsCorrect, setCountWordsCorrect] = useState(0);
+    const [countWordsCorrect, setCountWordsCorrect] = useState(-1);
     const [showOverlayEndGame, setOverlayEndGame] = useState(false);
     const [showOverlayNextLevel, setShowOverlayNextLevel] = useState(false);
     const [guessedCorrectly, setGuessedCorrectly] = useState(false);
@@ -100,7 +100,7 @@ function Index() {
         if (definitions.length ===0){return;}
         let newDefinition = definitions.pop();
         if (newDefinition !== null && newDefinition !== "no definitions found in corpora"){
-            setPublicDefinitions([...publicDefinitions, `${newDefinition}`]);
+            setPublicDefinitions([...publicDefinitions, `${newDefinition[0]}`]);
         }
     };
     const handleAddExample = () => {
@@ -109,9 +109,16 @@ function Index() {
         if (examples.length ===0){return;}
         let newExample = examples.pop();
         if (newExample !== null && newExample !== "no example found in corpora"){
-            setPublicExamples([...publicExamples, `${newExample}`]);
+            setPublicExamples([...publicExamples, `${newExample[0]}`]);
         }
     };
+
+
+
+    function ranking(sentence) {
+        return sentence.length;
+    };
+
 
 
     const handleRandomWord = () => {
@@ -163,14 +170,15 @@ function Index() {
                                 if (meaning["partOfSpeech"] === wordType) {
 
                                     let definitionToAdd = meaning["definition"];
-                                    def.push(definitionToAdd);
+                                    def.push([definitionToAdd,ranking(definitionToAdd)]);
                                     if (meaning.hasOwnProperty('examples'))
                                     {
                                         for (const example of meaning["examples"]) {
                                             let exampleToAdd= example;
                                             exampleToAdd = exampleToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
                                             exampleToAdd = exampleToAdd.replace(str, "*".repeat(str.length));
-                                            exa.push(exampleToAdd);
+
+                                            exa.push([exampleToAdd,ranking(exampleToAdd)]);
                                                 //todo: the rating von jedem example oder defintion
                                         }
                                     }
@@ -179,7 +187,15 @@ function Index() {
                             if (def.length <= 3 || exa.length <= 3){
                                 handleRandomWord()
                             }
+                            def.sort(function(a, b) {
+                              return a[1] - b[1];
+                            });
+
                             setDefinitions(def);
+
+                            exa.sort(function(a, b) {
+                              return a[1] - b[1];
+                            });
                             setExamples(exa);
                         })
                         .catch((error) => {
@@ -191,6 +207,10 @@ function Index() {
                 }
             });
     };
+
+
+
+
     const handleRevealNextLetter = () => {
         const input = document.querySelector(".input");
         const letters = word.split("");
