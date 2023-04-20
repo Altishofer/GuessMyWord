@@ -3,6 +3,7 @@ import "./styles.css";
 
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import nlp from 'compromise'
 
 const wordTypes = ["noun", "verb", "adjective", "adverb", "preposition"];
 const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
@@ -100,6 +101,7 @@ function Index() {
         if (definitions.length ===0){return;}
         let newDefinition = definitions.pop();
         if (newDefinition !== null && newDefinition !== "no definitions found in corpora"){
+            console.log(newDefinition[1])
             setPublicDefinitions([...publicDefinitions, `${newDefinition[0]}`]);
         }
     };
@@ -116,7 +118,43 @@ function Index() {
 
 
     function ranking(sentence) {
-        return sentence.length;
+        const tag_importance = {
+            'NN': 5, // Noun, singular or mass
+            'NNS': 5, // Noun, plural
+            'NNP': 7, // Proper noun, singular
+            'NNPS': 7, // Proper noun, plural
+            'VB': 3, // Verb, base form
+            'VBD': 3, // Verb, past tense
+            'VBG': 3, // Verb, gerund or present participle
+            'VBN': 3, // Verb, past participle
+            'VBP': 3, // Verb, non-3rd person singular present
+            'VBZ': 3, // Verb, 3rd person singular present
+            'JJ': 2, // Adjective
+            'JJR': 2, // Adjective, comparative
+            'JJS': 2, // Adjective, superlative
+            'RB': 1, // Adverb
+            'RBR': 1, // Adverb, comparative
+            'RBS': 1, // Adverb, superlative
+            'IN': 1, // Preposition or subordinating conjunction
+            'CC': 1, // Coordinating conjunction
+            'PRP': 1, // Personal pronoun
+            'PRP$': 1, // Possessive pronoun
+            'WP': 1, // Wh-pronoun
+            'WP$': 1 // Possessive wh-pronoun
+        };
+
+
+        let sentenceValue= 0
+        const doc = nlp(sentence);
+        doc.compute('penn')
+        let json=doc.json();
+        for (const meaning of json[0]['terms']) {
+           if (meaning['penn'] in tag_importance)
+           {
+                sentenceValue= sentenceValue + tag_importance[meaning['penn']]
+           }
+        }
+        return sentenceValue;
     };
 
 
