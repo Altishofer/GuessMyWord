@@ -51,6 +51,7 @@ function Index() {
         }
     })
 
+
     useEffect(() => {
         if(hintIndex > 40  && showOverlayNextLevel !== true && activatedCefrLevels.indexOf(true) !=5){
             setShowOverlayNextLevel(true);
@@ -179,6 +180,7 @@ function Index() {
                         activatedCefrLevels[cefrLevels.indexOf(fields[2])]
                     );
                 });
+
                 if (filteredLines.length > 0) {
                     const randomIndex = Math.floor(Math.random() * filteredLines.length);
                     const fields = filteredLines[randomIndex].split(",");
@@ -201,9 +203,15 @@ function Index() {
 
                             for (const meaning of json_data["results"]) {
                                 if (meaning["partOfSpeech"] === wordType) {
+                                    if (meaning.hasOwnProperty('definition'))
+                                    {
 
-                                    let definitionToAdd = meaning["definition"];
-                                    def.push([definitionToAdd,ranking(definitionToAdd)]);
+                                        let definitionToAdd=  meaning["definition"];
+                                        definitionToAdd = definitionToAdd.replace(new RegExp(`[^a-zA-Z0-9 ]`, "g"), "")
+                                        definitionToAdd = definitionToAdd.replace(str, "*".repeat(str.length));
+                                        def.push([definitionToAdd,ranking(definitionToAdd)]);
+
+                                    }
                                     if (meaning.hasOwnProperty('examples'))
                                     {
                                         for (const example of meaning["examples"]) {
@@ -212,12 +220,14 @@ function Index() {
                                             exampleToAdd = exampleToAdd.replace(str, "*".repeat(str.length));
 
                                             exa.push([exampleToAdd,ranking(exampleToAdd)]);
-                                                //todo: the rating von jedem example oder defintion
                                         }
                                     }
                                 }
                             }
-                            if (def.length <= 3 || exa.length <= 3){
+                            console.log(def.length )
+                            console.log(exa.length ,)
+
+                            if (def.length < 2 || exa.length < 2){
                                 handleRandomWord()
                             }
                             def.sort(function(a, b) {
