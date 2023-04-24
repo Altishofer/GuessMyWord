@@ -115,8 +115,7 @@ function Index() {
         }
     };
 
-
-
+    
     function ranking(sentence) {
         const tag_importance = {
             'NN': 5, // Noun, singular or mass
@@ -143,7 +142,6 @@ function Index() {
             'WP$': 1 // Possessive wh-pronoun
         };
 
-
         let sentenceValue= 0
         const doc = nlp(sentence);
         doc.tag('penn')
@@ -156,8 +154,6 @@ function Index() {
         }
         return sentenceValue;
     }
-
-
 
     const handleRandomWord = () => {
         setCountWordsCorrect(countWordsCorrect+1);
@@ -188,7 +184,6 @@ function Index() {
                     const fields = filteredLines[randomIndex].split(",");
                     const str = fields[0].trim().replace(/"(.*)"$/, "$1");
                     setWord(str);
-                    //const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${str}`;
                     const options = {
                     	method: 'GET',
                     	headers: {
@@ -261,7 +256,7 @@ function Index() {
         } else {
             setLetterShown(0);
         }
-        setDisplayedWord(newDisplayedWord); // Update the displayedWord
+        setDisplayedWord(newDisplayedWord);
         setUserInput(input.value);
         setHintIndex(hintIndex - 2);
     };
@@ -271,7 +266,7 @@ function Index() {
     return (
     <div className="container">
         <h1 className="header-title">Guess my Word</h1>
-        <h2 className="points">score: {hintIndex} | words: {countWordsCorrect}</h2>
+        <h2 className="points">score: {hintIndex} | words: {countWordsCorrect < 0 ? 0 : countWordsCorrect}</h2>
         <Popup
             open={showOverlayEndGame}
             onClose={() => {
