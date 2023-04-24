@@ -252,8 +252,6 @@ function Index() {
     };
 
 
-
-
     const handleRevealNextLetter = () => {
         const input = document.querySelector(".input");
         const letters = word.split("");
@@ -270,7 +268,6 @@ function Index() {
         setUserInput(input.value);
         setHintIndex(hintIndex - 2);
     };
-
 
 
     return (
