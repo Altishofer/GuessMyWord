@@ -146,7 +146,7 @@ function Index() {
 
         let sentenceValue= 0
         const doc = nlp(sentence);
-        doc.compute('penn')
+        doc.tag('penn')
         let json=doc.json();
         for (const meaning of json[0]['terms']) {
            if (meaning['penn'] in tag_importance)
@@ -155,7 +155,7 @@ function Index() {
            }
         }
         return sentenceValue;
-    };
+    }
 
 
 
