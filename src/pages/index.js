@@ -102,7 +102,6 @@ function Index() {
         if (definitions.length ===0){return;}
         let newDefinition = definitions.pop();
         if (newDefinition !== null && newDefinition !== "no definitions found in corpora"){
-            console.log(newDefinition[1])
             setPublicDefinitions([...publicDefinitions, `${newDefinition[0]}`]);
         }
     };
@@ -116,20 +115,23 @@ function Index() {
         }
     };
 
+
     
     function ranking(sentence) {
         const tag_importance = {
+            'Noun': 5, // Noun, singular or mass
             'NN': 5, // Noun, singular or mass
             'NNS': 5, // Noun, plural
             'NNP': 7, // Proper noun, singular
             'NNPS': 7, // Proper noun, plural
-            'VB': 3, // Verb, base form
+            'Verb': 3, // Verb, base form
+            'VV': 3, // Verb, base form
             'VBD': 3, // Verb, past tense
             'VBG': 3, // Verb, gerund or present participle
             'VBN': 3, // Verb, past participle
             'VBP': 3, // Verb, non-3rd person singular present
             'VBZ': 3, // Verb, 3rd person singular present
-            'JJ': 2, // Adjective
+            'Adjective': 2, // Adjective
             'JJR': 2, // Adjective, comparative
             'JJS': 2, // Adjective, superlative
             'RB': 1, // Adverb
@@ -140,7 +142,8 @@ function Index() {
             'PRP': 1, // Personal pronoun
             'PRP$': 1, // Possessive pronoun
             'WP': 1, // Wh-pronoun
-            'WP$': 1 // Possessive wh-pronoun
+            'WP$': 1, // Possessive wh-pronoun
+            'Pivot': 1
         };
 
         let sentenceValue= 0
@@ -148,10 +151,13 @@ function Index() {
         doc.tag('penn')
         let json=doc.json();
         for (const meaning of json[0]['terms']) {
-           if (meaning['penn'] in tag_importance)
+
+           if (meaning['chunk'] in tag_importance)
            {
-                sentenceValue= sentenceValue + tag_importance[meaning['penn']]
+
+                sentenceValue= sentenceValue + tag_importance[meaning['chunk']]
            }
+
         }
         return sentenceValue;
     }
@@ -224,21 +230,35 @@ function Index() {
                                     }
                                 }
                             }
-                            console.log(def.length )
-                            console.log(exa.length ,)
 
                             if (def.length < 2 || exa.length < 2){
                                 handleRandomWord()
                             }
-                            def.sort(function(a, b) {
-                              return a[1] - b[1];
-                            });
+                            if(activatedCefrLevels.indexOf(true) >3)
+                            {
+                                def.sort(function(a, b) {
+                                  return a[1] - b[1];
+                                });
+                            }else
+                            {
+                                def.sort(function(a, b) {
+                                  return b[1] - a[1];
+                                });
+                            }
+
 
                             setDefinitions(def);
-
-                            exa.sort(function(a, b) {
-                              return a[1] - b[1];
-                            });
+                            if(activatedCefrLevels.indexOf(true) >3)
+                            {
+                                exa.sort(function(a, b) {
+                                  return a[1] - b[1];
+                                });
+                            }else
+                            {
+                                exa.sort(function(a, b) {
+                                  return b[1] - a[1];
+                                });
+                            }
                             setExamples(exa);
                         })
                         .catch((error) => {
