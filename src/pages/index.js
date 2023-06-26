@@ -8,6 +8,8 @@ import nlp from 'compromise'
 const wordTypes = ["noun", "verb", "adjective", "adverb", "preposition"];
 const cefrLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
+//All the function called with the proper name that helps to understand the purpuse.
+
 function Index() {
     const [countWordsCorrect, setCountWordsCorrect] = useState(-1);
     const [showOverlayEndGame, setOverlayEndGame] = useState(false);
@@ -33,7 +35,9 @@ function Index() {
     );
     const [countRequest, setCountRequest] = useState(0);
 
+    //This Function (useEffect) are here and are constantly checks
 
+    //This checks if there word is right in case it is it moves.
     useEffect(() => {
         const container = document.querySelector(".container");
         const input = document.querySelector(".input");
@@ -44,6 +48,7 @@ function Index() {
         }
     }, [word]);
 
+    //checks if you lost
     useEffect(() => {
         if(hintIndex < 0 && showOverlayEndGame !== true){
             setOverlayEndGame(true);
@@ -51,18 +56,20 @@ function Index() {
         }
     })
 
-
+    //checks if you won
     useEffect(() => {
         if(hintIndex > 40  && showOverlayNextLevel !== true && activatedCefrLevels.indexOf(true) !=5){
             setShowOverlayNextLevel(true);
         }
     })
 
+
     const handleWordTypeChange = (type) => {
         const newActivatedWordTypes = wordTypes.map((_, index) => index === wordTypes.indexOf(type));
         setActivatedWordTypes(newActivatedWordTypes);
         setWordType(type);
     };
+
 
     const handleCefrLevelIncrease = () => {
         const indexOldCurrentCefrLevels = cefrLevels.indexOf(cefrLevel)
@@ -72,10 +79,10 @@ function Index() {
         setHintIndex(20);
         setShowOverlayNextLevel(false);
     };
+
     const handleClosingPopUp = () => {
         setShowOverlayNextLevel(false);
     };
-
 
     const handleCefrLevelChange = (level) => {
         const newActivatedCefrLevels = cefrLevels.map((_, index) => index === cefrLevels.indexOf(level));
@@ -94,7 +101,6 @@ function Index() {
             setGuessedCorrectly(false);
         }
     };
-
 
     const handleAddDefinition = () => {
         setHintIndex(hintIndex - 1);
@@ -116,7 +122,6 @@ function Index() {
     };
 
 
-    
     function ranking(sentence) {
         const tag_importance = {
             'Noun': 5, // Noun, singular or mass
@@ -150,17 +155,18 @@ function Index() {
         const doc = nlp(sentence);
         doc.tag('penn')
         let json=doc.json();
-        for (const meaning of json[0]['terms']) {
-
+        for (const meaning of json[0]['terms'])
+        {
            if (meaning['chunk'] in tag_importance)
            {
-
                 sentenceValue= sentenceValue + tag_importance[meaning['chunk']]
            }
 
         }
         return sentenceValue;
     }
+
+    //this it the entire logic of choosing a word then get the clues
 
     const handleRandomWord = () => {
         setCountWordsCorrect(countWordsCorrect+1);
@@ -194,6 +200,7 @@ function Index() {
                     setWord(str);
                     const options = {
                     	method: 'GET',
+                    	//this is my private API I will delete this key in September.
                     	headers: {
                     		'X-RapidAPI-Key': '382102422cmshf0f6394b2011b79p18585bjsn297072bb9584',
                     		'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com'
@@ -289,7 +296,9 @@ function Index() {
         setHintIndex(hintIndex - 2);
     };
 
-
+    //this return is the page
+    //here we get the input and output.
+    //whe call all the function that where defined.
     return (
     <div className="container">
         <h1 className="header-title">Guess my Word</h1>
