@@ -60,3 +60,23 @@ Follow these steps to set up the project:
    http://localhost:8000/
    ```
 
+### Impressions
+
+#### word guessed correctly
+<img src="images/wordGuessedCorrectly.png"/>
+
+#### game over
+<img src="images/gameOver.png"/>
+
+#### landing page
+<img src="images/landingPage.png"/>
+
+#### level up logic
+<img src="images/levelUpLogic.png"/>
+
+#### revealed letter, example and definition
+<img src="images/revealLetterExampleDefinition.png"/>
+
+#### selection of CEFR and POS
+<img src="images/selectionOfCEFRandPOS.png"/>
+
